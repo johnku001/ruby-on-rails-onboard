@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :update, :delete, :from, :show_fullname]
+  before_action :set_user, only: [:update, :delete, :from, :show_fullname]
+  after_action :clear_cache, only: [:update]
 
   # GET /users
   def index
@@ -15,6 +16,9 @@ class UsersController < ApplicationController
 
   # GET /users/1
   def show
+    @user = Rails.cache.fetch("#{params[:id]}_cache", expires_in: 10.minute ) do
+      User.find(params[:id])
+    end
     options = {}
     options[:is_collection] = false
     render json: UserSerializer.new(@user, options).serializable_hash.to_json
@@ -70,6 +74,11 @@ class UsersController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_user
       @user = User.find(params[:id])
+    end
+
+    # Clear cache
+    def clear_cache
+      Rails.cache.delete("#{params[:id]}_cache")
     end
 
     # Only allow a trusted parameter "white list" through.
