@@ -4,4 +4,5 @@ class UserSerializer
   attribute :full_name do |user, params|
     "#{user.last_name} #{user.first_name} "
   end
+  has_many :shop
 end

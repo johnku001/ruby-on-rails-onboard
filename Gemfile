@@ -23,6 +23,9 @@ gem 'puma', '~> 3.11'
  #Add fast_jsonapi
  gem 'jsonapi-serializer'
 
+ #Add dotenv-rails
+ gem 'dotenv-rails', groups: [:development, :test]
+
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false

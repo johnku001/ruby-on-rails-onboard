@@ -46,6 +46,6 @@ class ShopsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def shop_params
-      params.require(:shop).permit(:name, :metas)
+      params.require(:shop).permit(:name)
     end
 end

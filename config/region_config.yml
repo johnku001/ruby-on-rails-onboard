@@ -1,0 +1,5 @@
+{
+  'hong_kong': ['Kowloon', 'Hong Kong Island', 'New Territories'],
+  'taiwan': ['taichung', 'taipei'],
+  'china': ['shanghai', 'guangzhou'],
+}

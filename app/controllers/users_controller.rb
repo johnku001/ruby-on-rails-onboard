@@ -1,10 +1,9 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :update, :delete, :from]
+  before_action :set_user, only: [:show, :update, :delete, :from, :show_fullname]
 
   # GET /users
   def index
     @users = User.all
-    # render json: @users
     render json: UserSerializer.new(@users).serializable_hash.to_json
   end
 
@@ -16,12 +15,13 @@ class UsersController < ApplicationController
 
   # GET /users/1
   def show
-    render json: UserSerializer.new(@users.to_a)
+    options = {}
+    options[:is_collection] = false
+    render json: UserSerializer.new(@user, options).serializable_hash.to_json
   end
 
   # GET /users/:id/full_name
   def show_fullname
-    @user = User.find(params[:id])
     fullname = "#{@user[:first_name]} #{@user[:last_name]}"
     render json: fullname, status: 200
   end
@@ -42,7 +42,7 @@ class UsersController < ApplicationController
   end
 
   # DELETE /users/1
-  def delete
+  def destroy
     if @user
       @user.destroy
       render json: {
