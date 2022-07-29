@@ -1,10 +1,11 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :update, :destroy]
+  before_action :set_user, only: [:show, :update, :delete, :from]
 
   # GET /users
   def index
     @users = User.all
-    render json: @users
+    # render json: @users
+    render json: UserSerializer.new(@users).serializable_hash.to_json
   end
 
   # GET /users/count
@@ -15,7 +16,7 @@ class UsersController < ApplicationController
 
   # GET /users/1
   def show
-    render json: @user
+    render json: UserSerializer.new(@users.to_a)
   end
 
   # GET /users/:id/full_name
@@ -27,12 +28,8 @@ class UsersController < ApplicationController
 
   # POST /users
   def create
-    @user = User.create(user_params)
-    if !@user.errors.any?
-      render json: @user, status: :created, location: @user
-    else
-      render json: @user.errors, status: :unprocessable_entity
-    end
+    @user = User.create!(user_params)
+    render json: @user
   end
 
   # PATCH/PUT /users/1
@@ -46,7 +43,6 @@ class UsersController < ApplicationController
 
   # DELETE /users/1
   def delete
-    @user = User.find(params[:id])
     if @user
       @user.destroy
       render json: {
@@ -56,6 +52,17 @@ class UsersController < ApplicationController
       render json: {
         error: 'Unable to delete User'
       }, status: 400
+    end
+  end
+
+  # GET from region
+  def from
+    if @user.region == "hong_kong" || @user.region == "taiwan" || @user.region == "china"
+      region = Object.const_get ("Region::"+@user.region.gsub("_"," ").titleize.gsub(" ","") + "Service")
+      render json: region.new(@user).call
+
+    else
+      render json: "I am not from China, Taiwan or Hong Kong"
     end
   end
 

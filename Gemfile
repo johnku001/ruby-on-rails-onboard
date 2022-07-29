@@ -20,6 +20,9 @@ gem 'puma', '~> 3.11'
 # Add momgoDB
  gem 'mongoid', '~> 7.0.5'
 
+ #Add fast_jsonapi
+ gem 'jsonapi-serializer'
+
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false

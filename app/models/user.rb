@@ -11,10 +11,6 @@ class User
   field :region, type: String
   validates :region,  inclusion: { in: ["hong_kong", "taiwan", "china"] }
 
-  # field :gender, type: String
-  # validates :gender, inclusion: { in: ["Male", "Female", "Others"] }
-
-  # field :address, type: Hash
-
-  # has_one :shop
+  has_many :shop
+ 
 end
