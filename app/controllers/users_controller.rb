@@ -45,6 +45,11 @@ class UsersController < ApplicationController
     end
   end
 
+  # PATCH /users/1/grow
+  def age_grow
+    render json: IncrementUserAgeJob.perform_later(params[:id])
+  end
+
   # DELETE /users/1
   def destroy
     if @user

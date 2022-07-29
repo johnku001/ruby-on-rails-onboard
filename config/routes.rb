@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   get 'users/:id/from', to: 'users#from'
   post 'users', to: 'users#create'
   patch 'users/:id', to: 'users#update'
+  patch 'users/:id/grow', to: 'users#age_grow'
   delete 'users/:id', to: 'users#destroy'
   # Shop
   get 'shops', to: 'shops#index'
