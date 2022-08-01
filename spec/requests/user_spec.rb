@@ -28,7 +28,7 @@ RSpec.describe "Users", type: :request do
     it "returns http 200" do
       get "/users/62e743a1ce9fb70f75b09fdc" 
       # check the http status of the response
-      expect(response).to have_http_status(200)
+      expect(response).to have_http_status(:ok)
     end
   end
 
