@@ -19,21 +19,33 @@ class UsersController < ApplicationController
     @user = Rails.cache.fetch("#{params[:id]}_cache", expires_in: 10.minute ) do
       User.find(params[:id])
     end
-    options = {}
-    options[:is_collection] = false
-    render json: UserSerializer.new(@user, options).serializable_hash.to_json
+    if @user
+      options = {}
+      options[:is_collection] = false
+      render json: UserSerializer.new(@user, options).serializable_hash.to_json, status: :ok
+    else
+      render json: { error: "User not found" }, status: 404
+    end
   end
 
   # GET /users/:id/full_name
   def show_fullname
-    fullname = "#{@user[:first_name]} #{@user[:last_name]}"
-    render json: fullname, status: 200
+    if @user
+      fullname = "#{@user[:first_name]} #{@user[:last_name]}"
+      render json: fullname, status: 200
+    else
+      render json: { error: "User not found" }, status: 404
+    end
   end
 
   # POST /users
   def create
     @user = User.create!(user_params)
-    render json: @user
+      if @user
+    render json: @user, status: :created
+    else
+      render json: { error: "User not created:" +  @user }, status: 404
+    end
   end
 
   # PATCH/PUT /users/1
@@ -66,12 +78,15 @@ class UsersController < ApplicationController
 
   # GET from region
   def from
-    if @user.region == "hong_kong" || @user.region == "taiwan" || @user.region == "china"
-      region = Object.const_get ("Region::"+@user.region.gsub("_"," ").titleize.gsub(" ","") + "Service")
-      render json: region.new(@user).call
-
+    if @user
+      if @user.region == "hong_kong" || @user.region == "taiwan" || @user.region == "china"
+        region = Object.const_get ("Region::"+@user.region.gsub("_"," ").titleize.gsub(" ","") + "Service")
+        render json: region.new(@user).call, status: 200
+      else
+        render json: "I am not from China, Taiwan or Hong Kong", status: 200
+      end
     else
-      render json: "I am not from China, Taiwan or Hong Kong"
+      render json: { error: "User not found" }, status: 404
     end
   end
 
